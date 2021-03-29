@@ -12,22 +12,34 @@ export default class MainScene extends Phaser.Scene {
     this.load.image('jet', 'assets/sprite2.png');
     this.load.image('helicopter', 'assets/helicopter.png');
     this.load.image('playerLaser', 'assets/sprLaserPlayer.png');
+    this.load.spritesheet('enemyLaser', 'assets/sprEnemy2.png', {
+      frameWidth: 16,
+      frameHeight: 16,
+    });
   }
 
   create() {
+    this.anims.create({
+      key: 'enemyLaser',
+      frames: this.anims.generateFrameNumbers('sprEnemy2'),
+      frameRate: 20,
+      repeat: -1,
+    });
+
     this.add.image(400, 300, 'background');
-    // this.add.sprite(200, 100, 'jet');
+
     this.player = new Player(this, 400, 200, 'helicopter').setScale(0.3);
 
     this.cursors = this.input.keyboard.createCursorKeys();
 
     this.playerLasersGroup = this.add.group();
-    const enemyLaserGroup = this.add.group();
+    this.enemyLaserGroup = this.add.group();
 
     const genEnemyJets = () => {
       const yRandomPosition = Math.random() * this.game.config.height;
       const newEnemy = new Enemy(this, 25, yRandomPosition, 'jet');
-      enemyLaserGroup.add(newEnemy);
+      newEnemy.shoot(this.scene, newEnemy.x, newEnemy.y);
+      this.enemyLaserGroup.add(newEnemy);
     };
 
     this.time.addEvent({
