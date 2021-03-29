@@ -1,4 +1,5 @@
 import Entity from './Entity';
+import PlayerLaser from './PlayerLaser';
 
 export default class Player extends Entity {
   constructor(scene, x, y, key) {
@@ -20,5 +21,11 @@ export default class Player extends Entity {
 
   moveRight() {
     this.body.velocity.x = this.getData('speed');
+  }
+
+  shoot() {
+    const playerLaser = new PlayerLaser(this.scene, this.body.x, this.body.y, 'playerLaser');
+    playerLaser.angle += 90;
+    this.scene.playerLasersGroup.add(playerLaser, true);
   }
 }

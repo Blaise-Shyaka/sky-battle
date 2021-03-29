@@ -1,5 +1,6 @@
 import Phaser from 'phaser';
 import Player from './Player';
+import PlayerLaser from './PlayerLaser';
 
 export default class MainScene extends Phaser.Scene {
   constructor() {
@@ -20,7 +21,7 @@ export default class MainScene extends Phaser.Scene {
 
     this.cursors = this.input.keyboard.createCursorKeys();
 
-    const enemyJets = this.physics.add.group();
+    this.playerLasersGroup = this.add.group();
     const enemyLaserGroup = this.add.group();
 
     function genEnemyJets() {
@@ -47,6 +48,10 @@ export default class MainScene extends Phaser.Scene {
       this.player.moveLeft();
     } else if (this.cursors.right.isDown) {
       this.player.moveRight();
+    }
+
+    if (this.cursors.space.isDown) {
+      this.player.shoot();
     }
   }
 }
