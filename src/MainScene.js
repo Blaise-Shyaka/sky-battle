@@ -1,6 +1,6 @@
 import Phaser from 'phaser';
 import Player from './Player';
-import PlayerLaser from './PlayerLaser';
+import Enemy from './Enemy';
 
 export default class MainScene extends Phaser.Scene {
   constructor() {
@@ -24,12 +24,13 @@ export default class MainScene extends Phaser.Scene {
     this.playerLasersGroup = this.add.group();
     const enemyLaserGroup = this.add.group();
 
-    function genEnemyJets() {
+    const genEnemyJets = () => {
       const yRandomPosition = Math.random() * this.game.config.height;
-      // const jet = enemyJets.create(10, yRandomPosition, 'jet');
-    }
+      const newEnemy = new Enemy(this, 25, yRandomPosition, 'jet');
+      enemyLaserGroup.add(newEnemy);
+    };
 
-    const timer = this.time.addEvent({
+    this.time.addEvent({
       delay: 1000,
       callback: genEnemyJets,
       callbackScope: this,
