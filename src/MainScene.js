@@ -33,13 +33,14 @@ export default class MainScene extends Phaser.Scene {
     this.cursors = this.input.keyboard.createCursorKeys();
 
     this.playerLasersGroup = this.add.group();
+    this.enemiesGroup = this.add.group();
     this.enemyLaserGroup = this.add.group();
 
     const genEnemyJets = () => {
       const yRandomPosition = Math.random() * this.game.config.height;
       const newEnemy = new Enemy(this, 25, yRandomPosition, 'jet');
       newEnemy.shoot(this.scene, newEnemy.x, newEnemy.y);
-      this.enemyLaserGroup.add(newEnemy);
+      this.enemiesGroup.add(newEnemy);
     };
 
     this.time.addEvent({
@@ -66,5 +67,23 @@ export default class MainScene extends Phaser.Scene {
     if (this.cursors.space.isDown) {
       this.player.shoot();
     }
+
+    this.player.x = Phaser.Math.Clamp(this.player.x, 0, this.game.config.width - 35);
+    this.player.y = Phaser.Math.Clamp(this.player.y, 30, this.game.config.height - 55);
+
+    // this.destroyEnemyGroupElements(this.enemiesGroup);
+    // this.destroyEnemyGroupElements(this.enemyLaserGroup);
+  }
+
+  destroyEnemyGroupElements(group) {
+    group.children.iterate(child => {
+      console.log(child.getData('alive'));
+      // child.update();
+      const healthStatus = child.readStatus('alive');
+      if (healthStatus && child.body.x >= this.game.config.width) {
+        child.destroy();
+        child.setData('alive', false);
+      }
+    });
   }
 }

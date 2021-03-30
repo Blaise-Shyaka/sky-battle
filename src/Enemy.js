@@ -9,7 +9,7 @@ export default class Enemy extends Entity {
   }
 
   generate() {
-    const enemyLaser = new EnemyLaser(this.scene, this.x, this.y, 'enemyLaser');
+    const enemyLaser = new EnemyLaser(this.scene, this.x, this.y, 'jet');
     enemyLaser.angle -= 90;
     this.scene.enemyLaserGroup.add(enemyLaser);
   }

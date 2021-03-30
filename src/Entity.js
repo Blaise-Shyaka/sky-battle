@@ -6,5 +6,10 @@ export default class Entity extends Phaser.GameObjects.Sprite {
     this.scene = scene;
     this.scene.add.existing(this);
     this.scene.physics.world.enableBody(this, 0);
+    this.setData('alive', true);
+  }
+
+  readStatus(data) {
+    this.getData(data);
   }
 }
