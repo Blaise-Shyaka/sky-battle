@@ -5,6 +5,7 @@ import Enemy from './Enemy';
 export default class MainScene extends Phaser.Scene {
   constructor() {
     super({ key: 'MainScene' });
+    this.score = 0;
   }
 
   preload() {
@@ -16,12 +17,23 @@ export default class MainScene extends Phaser.Scene {
       frameWidth: 16,
       frameHeight: 16,
     });
+    this.load.spritesheet('explodePlane', './assets/explosion.png', {
+      frameWidth: 60,
+      frameHeight: 60,
+    });
   }
 
   create() {
     this.anims.create({
       key: 'enemyLaser',
-      frames: this.anims.generateFrameNumbers('sprEnemy2'),
+      frames: this.anims.generateFrameNumbers('enemyLaser'),
+      frameRate: 20,
+      repeat: -1,
+    });
+
+    this.anims.create({
+      key: 'explodePlane',
+      frames: this.anims.generateFrameNumbers('explodePlane', { start: 0, end: 20 }),
       frameRate: 20,
       repeat: -1,
     });
@@ -49,6 +61,24 @@ export default class MainScene extends Phaser.Scene {
       callbackScope: this,
       loop: true,
     });
+
+    this.physics.add.overlap(this.playerLasersGroup,
+      this.enemyLaserGroup,
+      this.handleLasersCollision,
+      null,
+      this);
+
+    this.physics.add.collider(this.enemyLaserGroup,
+      this.player,
+      this.handleHelicopterCrash,
+      null,
+      this);
+
+    this.physics.add.collider(this.playerLasersGroup,
+      this.enemiesGroup,
+      this.handleJetCrash,
+      null,
+      this);
   }
 
   update() {
@@ -71,19 +101,46 @@ export default class MainScene extends Phaser.Scene {
     this.player.x = Phaser.Math.Clamp(this.player.x, 0, this.game.config.width - 35);
     this.player.y = Phaser.Math.Clamp(this.player.y, 30, this.game.config.height - 55);
 
-    // this.destroyEnemyGroupElements(this.enemiesGroup);
-    // this.destroyEnemyGroupElements(this.enemyLaserGroup);
+    this.destroyEnemyGroupElements(this.enemiesGroup);
+    this.destroyEnemyGroupElements(this.enemyLaserGroup);
+    this.destroyPlayerLasers();
   }
 
   destroyEnemyGroupElements(group) {
-    group.children.iterate(child => {
-      console.log(child.getData('alive'));
-      // child.update();
-      const healthStatus = child.readStatus('alive');
-      if (healthStatus && child.body.x >= this.game.config.width) {
-        child.destroy();
-        child.setData('alive', false);
+    for (let i = 0; i < group.getChildren().length; i += 1) {
+      const enemy = group.getChildren()[i];
+      enemy.update();
+      if (enemy.body.x > this.game.config.width) {
+        enemy.destroy();
       }
-    });
+    }
+  }
+
+  destroyPlayerLasers() {
+    for (let i = 0; i < this.playerLasersGroup.getChildren().length; i += 1) {
+      const playerLaser = this.playerLasersGroup.getChildren()[i];
+      playerLaser.update();
+      if (this.player.body.x < 0) {
+        playerLaser.destroy();
+      }
+    }
+  }
+
+  handleLasersCollision(playerLaser, enemyLaser) {
+    enemyLaser.destroy();
+    playerLaser.destroy();
+    this.score += 50;
+  }
+
+  handleHelicopterCrash(enemyLaser, helicopter) {
+    helicopter.play('explodePlane');
+    enemyLaser.destroy();
+    this.scene.pause();
+  }
+
+  handleJetCrash(playerLaser, jet) {
+    jet.play('explodePlane');
+    // enemyLaser.destroy();
+    this.scene.pause();
   }
 }
