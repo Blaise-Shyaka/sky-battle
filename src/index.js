@@ -18,7 +18,7 @@ const config = {
 
 const game = new Phaser.Game(config);
 
-game.scene.start('GameIntro');
+// game.scene.start('GameIntro');
 
 // function preload() {
 //   this.load.image('background', 'assets/background.png');

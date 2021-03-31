@@ -6,6 +6,7 @@ export default class Enemy extends Entity {
   constructor(scene, x, y, key) {
     super(scene, x, y, key);
     this.body.velocity.x = Phaser.Math.Between(150, 250);
+    this.alive = true;
   }
 
   generate() {
@@ -17,11 +18,19 @@ export default class Enemy extends Entity {
   }
 
   shoot() {
-    this.scene.time.addEvent({
-      delay: 300,
-      callback: this.generate,
-      callbackScope: this,
-      loop: true,
-    });
+    if (this.alive) {
+      this.scene.time.addEvent({
+        delay: 300,
+        callback: this.generate,
+        callbackScope: this,
+        loop: true,
+      });
+    }
+  }
+
+  update() {
+    if (!this.alive) {
+      this.destroy();
+    }
   }
 }

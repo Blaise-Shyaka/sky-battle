@@ -34,11 +34,16 @@ export default class MainScene extends Phaser.Scene {
     this.anims.create({
       key: 'explodePlane',
       frames: this.anims.generateFrameNumbers('explodePlane', { start: 0, end: 20 }),
+      delay: 15,
       frameRate: 20,
       repeat: -1,
     });
 
     this.add.image(400, 300, 'background');
+
+    this.scoreText = this.add.text(30, 15, `Score: ${this.score}`, {
+      fontFamily: 'Arial', fontSize: 64, backgroundColor: '#333333', color: '#ffffff',
+    });
 
     this.player = new Player(this, 400, 200, 'helicopter').setScale(0.3);
 
@@ -74,7 +79,7 @@ export default class MainScene extends Phaser.Scene {
       null,
       this);
 
-    this.physics.add.collider(this.playerLasersGroup,
+    this.physics.add.overlap(this.playerLasersGroup,
       this.enemiesGroup,
       this.handleJetCrash,
       null,
@@ -129,18 +134,18 @@ export default class MainScene extends Phaser.Scene {
   handleLasersCollision(playerLaser, enemyLaser) {
     enemyLaser.destroy();
     playerLaser.destroy();
-    this.score += 50;
+    this.score += 0.005;
+    this.scoreText.setText(`Score: ${this.score.toFixed(0)}`);
   }
 
   handleHelicopterCrash(enemyLaser, helicopter) {
     helicopter.play('explodePlane');
-    enemyLaser.destroy();
     this.scene.pause();
   }
 
   handleJetCrash(playerLaser, jet) {
     jet.play('explodePlane');
-    // enemyLaser.destroy();
-    this.scene.pause();
+    this.score += 0.01;
+    this.scoreText.setText(`Score: ${this.score.toFixed(0)}`);
   }
 }
