@@ -6,6 +6,8 @@ export default class MainScene extends Phaser.Scene {
   constructor() {
     super({ key: 'MainScene' });
     this.score = 0;
+    this.gameApiId = 'WU53r6YoPGNHhlvVTFu9';
+    this.userName = 'Anonymous';
   }
 
   preload() {
@@ -21,6 +23,8 @@ export default class MainScene extends Phaser.Scene {
       frameWidth: 60,
       frameHeight: 60,
     });
+    // this.game.load.crossOrigin = true,
+    this.load.crossOrigin = true;
   }
 
   create() {
@@ -141,11 +145,34 @@ export default class MainScene extends Phaser.Scene {
   handleHelicopterCrash(enemyLaser, helicopter) {
     helicopter.play('explodePlane');
     this.scene.pause();
+    this.recordScore();
   }
 
   handleJetCrash(playerLaser, jet) {
     jet.play('explodePlane');
     this.score += 0.01;
     this.scoreText.setText(`Score: ${this.score.toFixed(0)}`);
+  }
+
+  async recordScore() {
+    const data = { user: this.userName, score: this.score.toFixed(0) };
+    const url = `https://us-central1-js-capstone-backend.cloudfunctions.net/api/games/${this.gameApiId}/scores/`;
+    try {
+      const result = await fetch(url,
+        {
+          method: 'POST',
+          // mode: 'no-cors',
+          headers: {
+            'Content-Type': 'application/json',
+          // 'Access-Control-Allow-Origin': '*',
+          // 'Access-Control-Allow-Credentials': true,
+          },
+          body: JSON.stringify(data),
+        });
+      const responseData = await result.json();
+      return responseData;
+    } catch (e) {
+      return e;
+    }
   }
 }
