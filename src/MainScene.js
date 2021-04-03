@@ -88,6 +88,24 @@ export default class MainScene extends Phaser.Scene {
       this.handleJetCrash,
       null,
       this);
+
+    this.gameOverText = this.add.text(160, 100, 'Game Over!', {
+      fontFamily: 'Arial', fontSize: 64, backgroundColor: '#333333', color: '#ffffff',
+    });
+
+    this.gameOverText.visible = false;
+
+    this.gameOverScore = this.add.text(180, 180, '', {
+      fontFamily: 'Arial', fontSize: 45, backgroundColor: '#333333', color: '#ffffff',
+    });
+
+    this.gameOverScore.visible = false;
+
+    this.scoreLeader = this.add.text(160, 260, '', {
+      fontFamily: 'Arial', fontSize: 45, backgroundColor: '#333333', color: '#ffffff',
+    });
+
+    this.scoreLeader.visible = false;
   }
 
   update() {
@@ -146,6 +164,12 @@ export default class MainScene extends Phaser.Scene {
     helicopter.play('explodePlane');
     this.scene.pause();
     this.recordScore();
+    this.getTopScorer();
+    this.gameOverScore.setText(`Your score is ${this.score.toFixed(0)}`);
+    this.scoreText.visible = false;
+    this.gameOverText.visible = true;
+    this.gameOverScore.visible = true;
+    this.scoreLeader.visible = true;
   }
 
   handleJetCrash(playerLaser, jet) {
@@ -161,16 +185,29 @@ export default class MainScene extends Phaser.Scene {
       const result = await fetch(url,
         {
           method: 'POST',
-          // mode: 'no-cors',
           headers: {
             'Content-Type': 'application/json',
-          // 'Access-Control-Allow-Origin': '*',
-          // 'Access-Control-Allow-Credentials': true,
           },
           body: JSON.stringify(data),
         });
       const responseData = await result.json();
       return responseData;
+    } catch (e) {
+      return e;
+    }
+  }
+
+  async getTopScorer() {
+    const url = `https://us-central1-js-capstone-backend.cloudfunctions.net/api/games/${this.gameApiId}/scores/`;
+    try {
+      const result = await fetch(url, { method: 'GET' });
+      const responseData = await result.json();
+      // console.log(responseData.result);
+      const topScorer = responseData.result.sort(
+        (a, b) => (parseInt(a.score, 10) > parseInt(b.score, 10) ? -1 : 1),
+      )[0];
+      this.scoreLeader.setText(`The top score is ${topScorer.score}`);
+      return topScorer;
     } catch (e) {
       return e;
     }
