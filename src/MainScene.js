@@ -106,6 +106,12 @@ export default class MainScene extends Phaser.Scene {
     });
 
     this.scoreLeader.visible = false;
+
+    this.replay = this.add.text(100, 340, 'To replay, refresh the browser', {
+      fontFamily: 'Arial', fontSize: 45, backgroundColor: '#333333', color: '#ffffff',
+    });
+
+    this.replay.visible = false;
   }
 
   update() {
@@ -170,6 +176,7 @@ export default class MainScene extends Phaser.Scene {
     this.gameOverText.visible = true;
     this.gameOverScore.visible = true;
     this.scoreLeader.visible = true;
+    this.replay.visible = true;
   }
 
   handleJetCrash(playerLaser, jet) {
