@@ -3,9 +3,14 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
+  "jest": {
+    "setupFiles": ["jest-canvas-mock"]
+  },
   "scripts": {
     "build": "webpack --config webpack.config.js",
-    "start": "webpack serve --config webpack.config.js"
+    "start": "webpack serve --config webpack.config.js",
+    "test": "jest",
+    "watch-test": "jest --watch"
   },
   "repository": {
     "type": "git",
@@ -23,6 +28,7 @@
     "@babel/plugin-transform-runtime": "^7.13.10",
     "@babel/preset-env": "^7.13.12",
     "babel-eslint": "^10.1.0",
+    "babel-jest": "^26.6.3",
     "babel-loader": "^8.2.2",
     "copy-webpack-plugin": "^8.1.0",
     "eslint": "^6.8.0",
@@ -30,6 +36,8 @@
     "eslint-plugin-import": "^2.20.2",
     "file-loader": "^6.2.0",
     "html-webpack-plugin": "^5.3.1",
+    "jest": "^26.6.3",
+    "jest-canvas-mock": "^2.3.1",
     "raw-loader": "^4.0.2",
     "stylelint": "^13.3.3",
     "stylelint-config-standard": "^20.0.0",
