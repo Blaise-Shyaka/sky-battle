@@ -16,7 +16,7 @@ Sky-Battle is a shooter game developed using phaser. A player uses a super-helic
 
 ## Live Demo
 
-[]()
+[Live demo link](https://blaise-shyaka.github.io/sky-battle/)
 
 ## Install
 ### Requirements
