@@ -16,34 +16,5 @@ const config = {
   scene: [GameIntro, MainScene],
 };
 
+// eslint-disable-next-line no-unused-vars
 const game = new Phaser.Game(config);
-
-// game.scene.start('GameIntro');
-
-// function preload() {
-//   this.load.image('background', 'assets/background.png');
-//   this.load.image('jet', 'assets/sprite2.png');
-//   this.load.image('helicopter', 'assets/helicopter.png');
-// }
-
-// function create() {
-//   console.log('main scene');
-//   this.add.image(400, 300, 'background');
-//   this.add.image(100, 50, 'jet');
-
-//   // Create enemy jets group
-//   this.enemyJets = this.physics.add.group();
-
-//   // Create multiple villains and make sure they move
-//   this.time.addEvent({
-//     delay: 1000,
-//     callBack() {
-//       const xPosition = 0;
-//       const yPosition = Phaser.Math.Between(0, this.game.config.width);
-//       const jetVelocity = Phaser.Math.Between(80, 200);
-//       const newJet = this.enemyJets.create(xPosition, yPosition, 'helicopter');
-//       newJet.velocity.y = jetVelocity;
-//     },
-//     loop: true,
-//   });
-// }
