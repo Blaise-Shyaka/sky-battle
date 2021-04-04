@@ -17,7 +17,7 @@ export default class GameIntro extends Phaser.Scene {
     this.pointer = this.input.activePointer;
     this.add.text(150, 25, 'SKY', { fontFamily: '"Press Start 2P"', fontSize: 100, color: '#4D1A0A' });
     this.add.text(150, 95, 'BATTLE', { fontFamily: '"Press Start 2P"', fontSize: 100, color: '#4D1A0A' });
-    this.playBtn.on('pointerdown', function () {
+    this.playBtn.on('pointerdown', () => {
       this.scene.start('MainScene');
     }, this);
   }
