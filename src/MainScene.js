@@ -169,7 +169,7 @@ export default class MainScene extends Phaser.Scene {
     this.scene.pause();
     this.recordScore();
     this.getTopScorer();
-    this.gameOverScore.setText(`Your score is ${this.score.toFixed(0)}`);
+    this.getPlayerScore();
     this.scoreText.visible = false;
     this.gameOverText.visible = true;
     this.gameOverScore.visible = true;
@@ -185,7 +185,7 @@ export default class MainScene extends Phaser.Scene {
 
   async recordScore() {
     const username = document.querySelector('#playerName').value.trim();
-    const data = { user: username, score: this.score.toFixed(0) };
+    const data = { user: username, score: parseInt(this.score.toFixed(0), 10) };
     const url = `https://us-central1-js-capstone-backend.cloudfunctions.net/api/games/${this.gameApiId}/scores/`;
     try {
       const result = await fetch(url,
@@ -213,6 +213,22 @@ export default class MainScene extends Phaser.Scene {
       )[0];
       this.scoreLeader.setText(`The top score is ${topScorer.score}`);
       return topScorer;
+    } catch (e) {
+      return e;
+    }
+  }
+
+  async getPlayerScore() {
+    const url = `https://us-central1-js-capstone-backend.cloudfunctions.net/api/games/${this.gameApiId}/scores/`;
+    const username = document.querySelector('#playerName').value.trim();
+    try {
+      const result = await fetch(url, { method: 'GET' });
+      const responseData = await result.json();
+      const playerScore = responseData
+        .result
+        .filter(entry => entry.user === username && entry.score === this.score);
+      this.gameOverScore.setText(`Your score is ${playerScore[0].score}`);
+      return playerScore[0].score;
     } catch (e) {
       return e;
     }
