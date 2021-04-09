@@ -1,6 +1,6 @@
 import Phaser from 'phaser';
-import Player from './Player';
-import Enemy from './Enemy';
+import Player from '../entities/Player';
+import Enemy from '../entities/Enemy';
 
 export default class MainScene extends Phaser.Scene {
   constructor() {
