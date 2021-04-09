@@ -7,7 +7,6 @@ export default class MainScene extends Phaser.Scene {
     super({ key: 'MainScene' });
     this.score = 0;
     this.gameApiId = 'WU53r6YoPGNHhlvVTFu9';
-    this.userName = 'Anonymous';
   }
 
   preload() {
@@ -23,7 +22,6 @@ export default class MainScene extends Phaser.Scene {
       frameWidth: 60,
       frameHeight: 60,
     });
-    // this.game.load.crossOrigin = true,
     this.load.crossOrigin = true;
   }
 
@@ -186,7 +184,8 @@ export default class MainScene extends Phaser.Scene {
   }
 
   async recordScore() {
-    const data = { user: this.userName, score: this.score.toFixed(0) };
+    const username = document.querySelector('#playerName').value.trim();
+    const data = { user: username, score: this.score.toFixed(0) };
     const url = `https://us-central1-js-capstone-backend.cloudfunctions.net/api/games/${this.gameApiId}/scores/`;
     try {
       const result = await fetch(url,
@@ -209,7 +208,6 @@ export default class MainScene extends Phaser.Scene {
     try {
       const result = await fetch(url, { method: 'GET' });
       const responseData = await result.json();
-      // console.log(responseData.result);
       const topScorer = responseData.result.sort(
         (a, b) => (parseInt(a.score, 10) > parseInt(b.score, 10) ? -1 : 1),
       )[0];
