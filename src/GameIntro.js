@@ -18,7 +18,14 @@ export default class GameIntro extends Phaser.Scene {
     this.add.text(150, 25, 'SKY', { fontFamily: '"Press Start 2P"', fontSize: 100, color: '#4D1A0A' });
     this.add.text(150, 95, 'BATTLE', { fontFamily: '"Press Start 2P"', fontSize: 100, color: '#4D1A0A' });
     this.playBtn.on('pointerdown', () => {
-      this.scene.start('MainScene');
+      const playerName = document.querySelector('#playerName').value.trim();
+      if (playerName.length > 2) {
+        this.scene.start('MainScene');
+        document.querySelector('#playerName').classList.add('hide');
+      } else {
+        const notice = this.add.text(340, 420, 'Please enter your name', { fontFamily: '"Press Start 2P"', fontSize: 15, color: '#ffffff' });
+        setTimeout(() => { notice.destroy(); }, 3000);
+      }
     }, this);
   }
 }
