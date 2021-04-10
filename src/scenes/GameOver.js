@@ -51,7 +51,6 @@ export default class GameOver extends Phaser.Scene {
       this.gameOverScore.setText(`Your score is ${playerScore[0].score}`);
       return playerScore[0].score;
     } catch (e) {
-      console.log(e);
       return e;
     }
   }

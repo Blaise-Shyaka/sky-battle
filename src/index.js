@@ -2,6 +2,7 @@ import Phaser from 'phaser';
 import { MainScene } from './scenes/MainScene';
 import GameIntro from './scenes/GameIntro';
 import GameOver from './scenes/GameOver';
+import LeaderBoard from './scenes/LeaderBoard';
 
 const config = {
   type: Phaser.AUTO,
@@ -14,7 +15,7 @@ const config = {
       enableBody: true,
     },
   },
-  scene: [GameIntro, MainScene, GameOver],
+  scene: [GameIntro, MainScene, GameOver, LeaderBoard],
 };
 
 // eslint-disable-next-line no-unused-vars
