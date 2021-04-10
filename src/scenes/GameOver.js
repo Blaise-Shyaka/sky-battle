@@ -38,6 +38,7 @@ export default class GameOver extends Phaser.Scene {
   }
 
   async getPlayerScore() {
+    this.gameOverScore.setText('Loading score ...');
     const url = `https://us-central1-js-capstone-backend.cloudfunctions.net/api/games/${this.gameApiId}/scores/`;
     const username = document.querySelector('#playerName').value.trim();
     try {

@@ -146,7 +146,7 @@ export class MainScene extends Phaser.Scene {
     this.scene.pause();
     this.recordScore();
     this.scoreText.visible = false;
-    this.scene.start('GameOver');
+    setTimeout(() => { this.scene.start('GameOver'); }, 2000);
   }
 
   handleJetCrash(playerLaser, jet) {

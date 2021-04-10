@@ -8,6 +8,7 @@ export default class LeaderBoard extends Phaser.Scene {
 
   create() {
     this.add.text(150, 30, 'LEADERBOARD', { fontSize: 65 });
+    this.loading = this.add.text(140, 150, '', { fontSize: 35 });
     this.playAgain = this.add.text(300, 390, 'Play Again');
     this.playAgain.setInteractive({ useHandCursor: true });
     this.pointer = this.input.activePointer;
@@ -22,6 +23,7 @@ export default class LeaderBoard extends Phaser.Scene {
   }
 
   async getTopScores() {
+    this.loading.setText('Loading top scorers ...');
     const url = `https://us-central1-js-capstone-backend.cloudfunctions.net/api/games/${this.gameApiId}/scores/`;
     try {
       const result = await fetch(url, { method: 'GET' });
@@ -29,6 +31,7 @@ export default class LeaderBoard extends Phaser.Scene {
       const topScores = responseData.result.sort(
         (a, b) => (parseInt(a.score, 10) > parseInt(b.score, 10) ? -1 : 1),
       ).slice(0, 5);
+      this.loading.destroy();
       this.printTopScores(topScores);
       return topScores;
     } catch (e) {
