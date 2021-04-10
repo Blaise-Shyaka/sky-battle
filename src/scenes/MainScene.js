@@ -2,10 +2,11 @@ import Phaser from 'phaser';
 import Player from '../entities/Player';
 import Enemy from '../entities/Enemy';
 
-export default class MainScene extends Phaser.Scene {
+export const myGame = { score: 0 };
+
+export class MainScene extends Phaser.Scene {
   constructor() {
     super({ key: 'MainScene' });
-    this.score = 0;
     this.gameApiId = 'WU53r6YoPGNHhlvVTFu9';
   }
 
@@ -43,7 +44,7 @@ export default class MainScene extends Phaser.Scene {
 
     this.add.image(400, 300, 'background');
 
-    this.scoreText = this.add.text(30, 15, `Score: ${this.score}`, {
+    this.scoreText = this.add.text(30, 15, `Score: ${myGame.score}`, {
       fontFamily: 'Arial', fontSize: 64, backgroundColor: '#333333', color: '#ffffff',
     });
 
@@ -86,30 +87,6 @@ export default class MainScene extends Phaser.Scene {
       this.handleJetCrash,
       null,
       this);
-
-    this.gameOverText = this.add.text(160, 100, 'Game Over!', {
-      fontFamily: 'Arial', fontSize: 64, backgroundColor: '#333333', color: '#ffffff',
-    });
-
-    this.gameOverText.visible = false;
-
-    this.gameOverScore = this.add.text(180, 180, '', {
-      fontFamily: 'Arial', fontSize: 45, backgroundColor: '#333333', color: '#ffffff',
-    });
-
-    this.gameOverScore.visible = false;
-
-    this.scoreLeader = this.add.text(160, 260, '', {
-      fontFamily: 'Arial', fontSize: 45, backgroundColor: '#333333', color: '#ffffff',
-    });
-
-    this.scoreLeader.visible = false;
-
-    this.replay = this.add.text(100, 340, 'To replay, refresh the browser', {
-      fontFamily: 'Arial', fontSize: 45, backgroundColor: '#333333', color: '#ffffff',
-    });
-
-    this.replay.visible = false;
   }
 
   update() {
@@ -160,32 +137,27 @@ export default class MainScene extends Phaser.Scene {
   handleLasersCollision(playerLaser, enemyLaser) {
     enemyLaser.destroy();
     playerLaser.destroy();
-    this.score += 0.005;
-    this.scoreText.setText(`Score: ${this.score.toFixed(0)}`);
+    myGame.score += 0.005;
+    this.scoreText.setText(`Score: ${myGame.score.toFixed(0)}`);
   }
 
   handleHelicopterCrash(enemyLaser, helicopter) {
     helicopter.play('explodePlane');
     this.scene.pause();
     this.recordScore();
-    this.getTopScorer();
-    this.getPlayerScore();
     this.scoreText.visible = false;
-    this.gameOverText.visible = true;
-    this.gameOverScore.visible = true;
-    this.scoreLeader.visible = true;
-    this.replay.visible = true;
+    this.scene.start('GameOver');
   }
 
   handleJetCrash(playerLaser, jet) {
     jet.play('explodePlane');
-    this.score += 0.01;
-    this.scoreText.setText(`Score: ${this.score.toFixed(0)}`);
+    myGame.score += 0.01;
+    this.scoreText.setText(`Score: ${myGame.score.toFixed(0)}`);
   }
 
   async recordScore() {
     const username = document.querySelector('#playerName').value.trim();
-    const data = { user: username, score: parseInt(this.score.toFixed(0), 10) };
+    const data = { user: username, score: parseInt(myGame.score.toFixed(0), 10) };
     const url = `https://us-central1-js-capstone-backend.cloudfunctions.net/api/games/${this.gameApiId}/scores/`;
     try {
       const result = await fetch(url,
@@ -213,22 +185,6 @@ export default class MainScene extends Phaser.Scene {
       )[0];
       this.scoreLeader.setText(`The top score is ${topScorer.score}`);
       return topScorer;
-    } catch (e) {
-      return e;
-    }
-  }
-
-  async getPlayerScore() {
-    const url = `https://us-central1-js-capstone-backend.cloudfunctions.net/api/games/${this.gameApiId}/scores/`;
-    const username = document.querySelector('#playerName').value.trim();
-    try {
-      const result = await fetch(url, { method: 'GET' });
-      const responseData = await result.json();
-      const playerScore = responseData
-        .result
-        .filter(entry => entry.user === username && entry.score === this.score);
-      this.gameOverScore.setText(`Your score is ${playerScore[0].score}`);
-      return playerScore[0].score;
     } catch (e) {
       return e;
     }

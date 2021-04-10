@@ -1,6 +1,7 @@
 import Phaser from 'phaser';
-import MainScene from './scenes/MainScene';
+import { MainScene } from './scenes/MainScene';
 import GameIntro from './scenes/GameIntro';
+import GameOver from './scenes/GameOver';
 
 const config = {
   type: Phaser.AUTO,
@@ -13,8 +14,10 @@ const config = {
       enableBody: true,
     },
   },
-  scene: [GameIntro, MainScene],
+  scene: [GameIntro, MainScene, GameOver],
 };
 
 // eslint-disable-next-line no-unused-vars
 const game = new Phaser.Game(config);
+game.score = 0;
+export default game;
