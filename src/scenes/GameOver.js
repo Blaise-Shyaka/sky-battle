@@ -1,5 +1,6 @@
 import Phaser from 'phaser';
 import { myGame } from './MainScene';
+import { getPlayerScore } from '../helpers/gameHelpers';
 
 export default class GameOver extends Phaser.Scene {
   constructor() {
@@ -34,25 +35,6 @@ export default class GameOver extends Phaser.Scene {
       fontFamily: 'Arial', fontSize: 45, color: '#ffffff',
     });
 
-    this.getPlayerScore();
-  }
-
-  async getPlayerScore() {
-    this.gameOverScore.setText('Loading score ...');
-    const url = `https://us-central1-js-capstone-backend.cloudfunctions.net/api/games/${this.gameApiId}/scores/`;
-    const username = document.querySelector('#playerName').value.trim();
-    try {
-      const result = await fetch(url, { method: 'GET' });
-      const responseData = await result.json();
-      const playerScore = responseData
-        .result
-        .filter(
-          entry => entry.user === username && entry.score === parseInt(myGame.score.toFixed(0), 10),
-        );
-      this.gameOverScore.setText(`Your score is ${playerScore[0].score}`);
-      return playerScore[0].score;
-    } catch (e) {
-      return e;
-    }
+    getPlayerScore(myGame.score, this.gameOverScore, this.gameApiId);
   }
 }

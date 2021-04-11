@@ -1,6 +1,7 @@
 import Phaser from 'phaser';
 import Player from '../entities/Player';
 import Enemy from '../entities/Enemy';
+import { incrementScore, recordScore } from '../helpers/gameHelpers';
 
 export const myGame = { score: 1 };
 
@@ -137,44 +138,21 @@ export class MainScene extends Phaser.Scene {
   handleLasersCollision(playerLaser, enemyLaser) {
     enemyLaser.destroy();
     playerLaser.destroy();
-    myGame.score += 0.005;
+    myGame.score = incrementScore(myGame.score, 0.005);
     this.scoreText.setText(`Score: ${myGame.score.toFixed(0)}`);
   }
 
   handleHelicopterCrash(enemyLaser, helicopter) {
     helicopter.play('explodePlane');
     this.scene.pause();
-    this.recordScore();
+    const result = recordScore(myGame.score, this.gameApiId);
     this.scoreText.visible = false;
-    setTimeout(() => { this.scene.start('GameOver'); }, 2000);
+    if (result) this.scene.start('GameOver');
   }
 
   handleJetCrash(playerLaser, jet) {
     jet.play('explodePlane');
-    myGame.score += 0.01;
+    myGame.score = incrementScore(myGame.score, 0.01);
     this.scoreText.setText(`Score: ${myGame.score.toFixed(0)}`);
-  }
-
-  async recordScore() {
-    const username = document.querySelector('#playerName').value.trim();
-    const data = {
-      user: username,
-      score: parseInt(myGame.score.toFixed(0), 10),
-    };
-    const url = `https://us-central1-js-capstone-backend.cloudfunctions.net/api/games/${this.gameApiId}/scores/`;
-    try {
-      const result = await fetch(url,
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(data),
-        });
-      const responseData = await result.json();
-      return responseData;
-    } catch (e) {
-      return e;
-    }
   }
 }

@@ -1,5 +1,6 @@
 import Phaser from 'phaser';
 import { myGame } from './MainScene';
+import { validUsername } from '../helpers/gameHelpers';
 
 export default class GameIntro extends Phaser.Scene {
   constructor() {
@@ -20,7 +21,8 @@ export default class GameIntro extends Phaser.Scene {
     this.add.text(150, 95, 'BATTLE', { fontFamily: '"Press Start 2P"', fontSize: 100, color: '#4D1A0A' });
     this.playBtn.on('pointerdown', () => {
       const playerName = document.querySelector('#playerName').value.trim();
-      if (playerName.length > 2) {
+      const validPlayerName = validUsername(playerName);
+      if (validPlayerName) {
         this.scene.start('MainScene');
         myGame.score = 1;
         document.querySelector('#playerName').classList.add('hide');

@@ -1,4 +1,5 @@
 import Phaser from 'phaser';
+import { getTopScores } from '../helpers/gameHelpers';
 
 export default class LeaderBoard extends Phaser.Scene {
   constructor() {
@@ -19,24 +20,7 @@ export default class LeaderBoard extends Phaser.Scene {
       playerNameInput.classList.remove('hide');
       playerNameInput.value = '';
     });
-    this.getTopScores();
-  }
-
-  async getTopScores() {
-    this.loading.setText('Loading top scorers ...');
-    const url = `https://us-central1-js-capstone-backend.cloudfunctions.net/api/games/${this.gameApiId}/scores/`;
-    try {
-      const result = await fetch(url, { method: 'GET' });
-      const responseData = await result.json();
-      const topScores = responseData.result.sort(
-        (a, b) => (parseInt(a.score, 10) > parseInt(b.score, 10) ? -1 : 1),
-      ).slice(0, 5);
-      this.loading.destroy();
-      this.printTopScores(topScores);
-      return topScores;
-    } catch (e) {
-      return e;
-    }
+    getTopScores(this.loading, this.gameApiId);
   }
 
   printTopScores(arr) {
