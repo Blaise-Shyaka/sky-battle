@@ -145,7 +145,8 @@ export class MainScene extends Phaser.Scene {
   handleHelicopterCrash(enemyLaser, helicopter) {
     helicopter.play('explodePlane');
     this.scene.pause();
-    const result = recordScore(myGame.score, this.gameApiId);
+    const username = document.querySelector('#playerName').value.trim();
+    const result = recordScore(username, myGame.score, this.gameApiId);
     this.scoreText.visible = false;
     if (result) this.scene.start('GameOver');
   }

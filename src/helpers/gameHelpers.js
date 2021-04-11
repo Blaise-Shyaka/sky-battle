@@ -3,8 +3,7 @@ export const validUsername = username => {
   return false;
 };
 
-export const recordScore = async (score, apiId) => {
-  const username = document.querySelector('#playerName').value.trim();
+export const recordScore = async (username, score, apiId) => {
   const data = {
     user: username,
     score: parseInt(score.toFixed(0), 10),
