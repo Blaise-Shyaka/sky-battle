@@ -35,6 +35,14 @@ export default class GameOver extends Phaser.Scene {
       fontFamily: 'Arial', fontSize: 45, color: '#ffffff',
     });
 
-    getPlayerScore(myGame.score, this.gameOverScore, this.gameApiId);
+    this.gameOverScore.setText('Loading score ...');
+    const username = document.querySelector('#playerName').value.trim();
+    const result = getPlayerScore(username, myGame.score, this.gameApiId);
+    this.setGameOverScoreText(result);
+  }
+
+  async setGameOverScoreText(res) {
+    const result = await res;
+    if (result) this.gameOverScore.setText(`Your score is ${result}`);
   }
 }

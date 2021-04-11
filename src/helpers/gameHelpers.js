@@ -30,10 +30,8 @@ export const incrementScore = (score, increment) => {
   return score;
 };
 
-export const getPlayerScore = async (score, scoreText, apiId) => {
-  scoreText.setText('Loading score ...');
+export const getPlayerScore = async (username, score, apiId) => {
   const url = `https://us-central1-js-capstone-backend.cloudfunctions.net/api/games/${apiId}/scores/`;
-  const username = document.querySelector('#playerName').value.trim();
   try {
     const result = await fetch(url, { method: 'GET' });
     const responseData = await result.json();
@@ -42,7 +40,6 @@ export const getPlayerScore = async (score, scoreText, apiId) => {
       .filter(
         entry => entry.user === username && entry.score === parseInt(score.toFixed(0), 10),
       );
-    scoreText.setText(`Your score is ${playerScore[0].score}`);
     return playerScore[0].score;
   } catch (e) {
     return e;
