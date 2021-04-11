@@ -59,7 +59,6 @@ export const getTopScores = async (loadingText, apiId) => {
       (a, b) => (parseInt(a.score, 10) > parseInt(b.score, 10) ? -1 : 1),
     ).slice(0, 5);
     loadingText.destroy();
-    this.printTopScores(topScores);
     return topScores;
   } catch (e) {
     return e;

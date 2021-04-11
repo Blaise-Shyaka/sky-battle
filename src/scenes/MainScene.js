@@ -146,14 +146,19 @@ export class MainScene extends Phaser.Scene {
     helicopter.play('explodePlane');
     this.scene.pause();
     const username = document.querySelector('#playerName').value.trim();
-    const result = recordScore(username, myGame.score, this.gameApiId);
+    const score = recordScore(username, myGame.score, this.gameApiId);
     this.scoreText.visible = false;
-    if (result) this.scene.start('GameOver');
+    this.startGameOverScene(score);
   }
 
   handleJetCrash(playerLaser, jet) {
     jet.play('explodePlane');
     myGame.score = incrementScore(myGame.score, 0.01);
     this.scoreText.setText(`Score: ${myGame.score.toFixed(0)}`);
+  }
+
+  async startGameOverScene(playerScore) {
+    const score = await playerScore;
+    if (score) this.scene.start('GameOver');
   }
 }

@@ -20,12 +20,14 @@ export default class LeaderBoard extends Phaser.Scene {
       playerNameInput.classList.remove('hide');
       playerNameInput.value = '';
     });
-    getTopScores(this.loading, this.gameApiId);
+    const topScores = getTopScores(this.loading, this.gameApiId);
+    this.printTopScores(topScores);
   }
 
-  printTopScores(arr) {
-    arr.forEach(elt => {
-      const yPosition = arr.indexOf(elt) * 30 + 130;
+  async printTopScores(arr) {
+    const myArr = await arr;
+    myArr.forEach(elt => {
+      const yPosition = myArr.indexOf(elt) * 30 + 130;
       this.add.text(300, yPosition, `${elt.user}: ${elt.score}`);
     });
   }
