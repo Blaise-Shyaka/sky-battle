@@ -50,7 +50,6 @@ export const getPlayerScore = async (score, scoreText, apiId) => {
 };
 
 export const getTopScores = async (loadingText, apiId) => {
-  loadingText.setText('Loading top scorers ...');
   const url = `https://us-central1-js-capstone-backend.cloudfunctions.net/api/games/${apiId}/scores/`;
   try {
     const result = await fetch(url, { method: 'GET' });
@@ -58,7 +57,6 @@ export const getTopScores = async (loadingText, apiId) => {
     const topScores = responseData.result.sort(
       (a, b) => (parseInt(a.score, 10) > parseInt(b.score, 10) ? -1 : 1),
     ).slice(0, 5);
-    loadingText.destroy();
     return topScores;
   } catch (e) {
     return e;

@@ -20,7 +20,9 @@ export default class LeaderBoard extends Phaser.Scene {
       playerNameInput.classList.remove('hide');
       playerNameInput.value = '';
     });
+    this.loading.setText('Loading top scorers ...');
     const topScores = getTopScores(this.loading, this.gameApiId);
+    this.destroyLoadingText(topScores);
     this.printTopScores(topScores);
   }
 
@@ -30,5 +32,10 @@ export default class LeaderBoard extends Phaser.Scene {
       const yPosition = myArr.indexOf(elt) * 30 + 130;
       this.add.text(300, yPosition, `${elt.user}: ${elt.score}`);
     });
+  }
+
+  async destroyLoadingText(scores) {
+    const topScores = await scores;
+    if (topScores) { this.loading.destroy(); }
   }
 }
